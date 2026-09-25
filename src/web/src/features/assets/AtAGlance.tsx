@@ -30,7 +30,7 @@ function Card({ icon, label, value, tone }: CardProps) {
         overflow: 'hidden',
         background: (t) =>
           `linear-gradient(135deg, ${alpha(tone, 0.08)} 0%, ${t.palette.background.paper} 60%)`,
-        border: (t) => `1px solid ${alpha(tone, 0.16)}`,
+        border: `1px solid ${alpha(tone, 0.16)}`,
       }}
     >
       <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>

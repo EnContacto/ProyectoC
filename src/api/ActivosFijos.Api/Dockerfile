@@ -1,11 +1,14 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-COPY ["ActivosFijos.Api.csproj", "./"]
-RUN dotnet restore "ActivosFijos.Api.csproj"
+COPY ["ActivosFijos.Api/ActivosFijos.Api.csproj", "ActivosFijos.Api/"]
+COPY ["ActivosFijos.Application/ActivosFijos.Application.csproj", "ActivosFijos.Application/"]
+COPY ["ActivosFijos.Infrastructure/ActivosFijos.Infrastructure.csproj", "ActivosFijos.Infrastructure/"]
+COPY ["ActivosFijos.Domain/ActivosFijos.Domain.csproj", "ActivosFijos.Domain/"]
+RUN dotnet restore "ActivosFijos.Api/ActivosFijos.Api.csproj"
 
 COPY . .
-RUN dotnet publish "ActivosFijos.Api.csproj" \
+RUN dotnet publish "ActivosFijos.Api/ActivosFijos.Api.csproj" \
     -c Release \
     -o /app/publish \
     /p:UseAppHost=false

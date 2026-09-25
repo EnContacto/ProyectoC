@@ -30,7 +30,7 @@ export function useUploadImport() {
       })
       return data
     },
-    onSuccess: (data, vars) => {
+    onSuccess: (_, vars) => {
       qc.invalidateQueries({ queryKey: importKeys.all })
       if (!vars.dryRun) {
         qc.invalidateQueries({ queryKey: assetKeys.all })

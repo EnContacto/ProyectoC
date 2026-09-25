@@ -85,8 +85,6 @@ export function AssetDepreciationList() {
     })
   }
 
-  const clearFilters = () => setFilters(DEFAULT_FILTERS)
-
   useEffect(() => {
     setRowSelection({})
   }, [

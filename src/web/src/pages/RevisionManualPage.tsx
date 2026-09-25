@@ -73,7 +73,7 @@ export function RevisionManualPage() {
                 px: 2,
                 py: 1,
                 borderRadius: 2,
-                border: (t) => `1px solid ${alpha(s.tone, 0.18)}`,
+                border: `1px solid ${alpha(s.tone, 0.18)}`,
                 background: `linear-gradient(135deg, ${alpha(s.tone, 0.08)} 0%, transparent 70%)`,
                 minWidth: 110,
               }}

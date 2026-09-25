@@ -45,7 +45,7 @@ function Counter({ label, value, tone }: CounterProps) {
       sx={{
         p: 1.5,
         borderRadius: 2,
-        border: (t) => `1px solid ${alpha(tone, 0.18)}`,
+        border: `1px solid ${alpha(tone, 0.18)}`,
         background: `linear-gradient(135deg, ${alpha(tone, 0.06)} 0%, transparent 70%)`,
         minWidth: 110,
       }}
@@ -132,7 +132,7 @@ export function ImportResultPanel({ result, isDryRun, onReverted }: Props) {
         sx={{
           p: 2.5,
           borderRadius: 2.5,
-          border: (t) => `1px solid ${alpha(summaryTone, 0.22)}`,
+          border: `1px solid ${alpha(summaryTone, 0.22)}`,
           background: `linear-gradient(135deg, ${alpha(summaryTone, 0.06)} 0%, ${alpha(summaryTone, 0.01)} 100%)`,
         }}
       >
@@ -288,7 +288,7 @@ export function ImportResultPanel({ result, isDryRun, onReverted }: Props) {
             p: 1.5,
             borderRadius: 2,
             bgcolor: alpha('#ED6C02', 0.06),
-            border: (t) => `1px solid ${alpha('#ED6C02', 0.22)}`,
+            border: `1px solid ${alpha('#ED6C02', 0.22)}`,
           }}
         >
           <Typography variant="body2" color="text.secondary">

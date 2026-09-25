@@ -70,7 +70,7 @@ function SummaryCard({ icon, label, value, tone }: SummaryCardProps) {
       sx={{
         p: 2,
         borderRadius: 2.5,
-        border: (t) => `1px solid ${alpha(tone, 0.18)}`,
+        border: `1px solid ${alpha(tone, 0.18)}`,
         background: `linear-gradient(135deg, ${alpha(tone, 0.08)} 0%, ${alpha(tone, 0.01)} 100%)`,
       }}
     >

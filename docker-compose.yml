@@ -28,8 +28,8 @@ services:
 
   backend:
     build:
-      context: ./src/api/ActivosFijos.Api
-      dockerfile: Dockerfile
+      context: ./src/api
+      dockerfile: ActivosFijos.Api/Dockerfile
     image: proyectoc-backend:latest
     container_name: CprojectbD-backend
     environment:
