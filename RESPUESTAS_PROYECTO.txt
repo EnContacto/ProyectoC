@@ -1,0 +1,23 @@
+CAMBIOS DEL BACKEND
+
+CATÁLOGOS (GET, requieren JWT)
+/api/companies -> [{ id, name, code }]
+/api/categories -> [{ id, name, code }]
+/api/locations -> [{ id, name }]
+/api/custodians -> [{ id, name }]
+/api/accounting-accounts -> [{ id, code, name }]
+Solo se devuelven registros activos. Las listas se ordenan por nombre, salvo categorías (orden de presentación y nombre) y cuentas (código).
+
+EDICIÓN MASIVA (requiere JWT)
+PATCH /api/assets/bulk
+Solicitud: { "ids": ["guid"], "fields": { "categoryId": "guid", "accountingAccountId": "guid", "locationId": "guid", "companyId": "guid" } }
+Todos los campos de fields son opcionales, pero se requiere al menos uno. Respuesta 200: { "updated": 1, "failed": ["guid"] }. failed contiene los IDs solicitados que no existen. Los IDs repetidos se procesan una vez. Si una referencia del catálogo no existe o está inactiva, responde 400 y no actualiza ningún activo. Los cambios se guardan en una transacción. Al cambiar empresa o categoría se genera un nuevo código de activo con el prefijo correspondiente.
+
+AT A GLANCE (requiere JWT)
+GET /api/assets/summary acepta los mismos filtros de GET /api/assets. Aplica los filtros al conjunto completo, sin paginación.
+Respuesta 200: { "totalCount": 0, "activoCount": 0, "inventarioCount": 0, "manualReviewCount": 0, "totalAcquisitionValue": 0, "totalAccumulatedDepreciation": 0, "totalNetCost": 0 }.
+Los importes suman los valores almacenados; los importes nulos cuentan como cero.
+
+MUI
+La afirmación de que ^9.4.0 no existe es incorrecta a la fecha del proyecto. @mui/material y @mui/icons-material 9.4.0 son versiones oficiales publicadas en npm, y src/package-lock.json las resuelve desde registry.npmjs.org. MUI documenta v9 como estable. No es un typo ni una versión custom/fork. No se cambió el frontend.
+Fuentes: https://mui.com/material-ui/getting-started/versions/ ; https://www.npmjs.com/package/@mui/material ; https://www.npmjs.com/package/@mui/icons-material

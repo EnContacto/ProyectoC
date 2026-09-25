@@ -1,0 +1,73 @@
+name: proyectoc
+
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: CprojectbD-mssql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    networks:
+      - proyectoc-net
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q 'SELECT 1' || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 40s
+
+  backend:
+    build:
+      context: ./src/api/ActivosFijos.Api
+      dockerfile: Dockerfile
+    image: proyectoc-backend:latest
+    container_name: CprojectbD-backend
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "http://+:5150"
+      ConnectionStrings__DefaultConnection: "Server=mssql,1433;Database=project;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;Encrypt=False;"
+      Jwt__Secret: "${JWT_SECRET}"
+      Jwt__Issuer: "ActivosFijos"
+      Jwt__Audience: "ActivosFijosClient"
+      Jwt__ExpiresMinutes: "480"
+      Serilog__MinimumLevel: "Information"
+      AllowedHosts: "*"
+    ports:
+      - "5150:5150"
+    depends_on:
+      mssql:
+        condition: service_healthy
+    networks:
+      - proyectoc-net
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./src/web
+      dockerfile: Dockerfile
+    image: proyectoc-frontend:latest
+    container_name: CprojectbD-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - proyectoc-net
+    restart: unless-stopped
+
+volumes:
+  mssql_data:
+
+networks:
+  proyectoc-net:
+    driver: bridge

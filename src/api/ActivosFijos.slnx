@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="ActivosFijos.Api/ActivosFijos.Api.csproj" />
+  <Project Path="ActivosFijos.Application/ActivosFijos.Application.csproj" />
+  <Project Path="ActivosFijos.Domain/ActivosFijos.Domain.csproj" />
+  <Project Path="ActivosFijos.Infrastructure/ActivosFijos.Infrastructure.csproj" />
+  <Project Path="ActivosFijos.Tests/ActivosFijos.Tests.csproj" />
+</Solution>

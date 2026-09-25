@@ -1,0 +1,16 @@
+DIAGNÓSTICO DEL ERROR AL IMPORTAR EXCEL
+
+Causa directa
+ImportService.cs, línea 230, ejecuta companies.Values.First(c => c.Id == group.Key.CompanyId). First lanza "Sequence contains no matching element" porque el CompanyId del grupo no corresponde a ninguna empresa de la base de datos.
+
+Causa en el código
+ParseRow crea un Asset nuevo, lee la columna "empresa" y llama a MapCompanyShortName, pero nunca asigna asset.CompanyId. Por tanto, CompanyId conserva el valor predeterminado Guid.Empty. La categoría sí se busca y se asigna a asset.CategoryId. Incluso cuando MapCompanyShortName reconoce NOVACARGO, IMPEX o SERVIPALLET, el código obtenido no se usa para buscar y asignar la empresa. Si la empresa es desconocida, se registra una advertencia que dice que se usará la empresa del archivo, pero esa asignación tampoco existe.
+
+Por qué la simulación funciona y el guardado falla
+Con dryRun=true se parsean las filas y se registran el lote, el staging y los errores, pero se omite PersistAssetsAsync. Con dryRun=false, las filas consideradas válidas pasan a PersistAssetsAsync; allí el primer grupo con CompanyId sin asignar provoca la excepción antes de insertar activos. Los errores críticos de otras filas no explican esta excepción: esas filas se excluyen de la lista de activos a guardar. Un successRows positivo en la simulación cuenta filas válidas, no activos ya insertados.
+
+Efecto del fallo
+La transacción de inserción de activos se cancela. ImportAsync marca el lote como Fallido, guarda el mensaje de error y vuelve a lanzar la excepción; por eso la petición termina en HTTP 500. El lote y sus datos de diagnóstico pueden quedar registrados, pero los activos no se insertan.
+
+Posible solución
+En ParseRow, resolver la empresa de cada fila contra Companies usando el código devuelto por MapCompanyShortName y asignar su Id a asset.CompanyId antes de marcar la fila como válida. Si la celda está vacía, el nombre no se reconoce o la empresa no existe en la base de datos, registrar un error de esa fila y excluirla de la inserción, o definir explícitamente una regla de empresa por defecto. Antes de agrupar y generar códigos, validar que todos los CompanyId de los activos a insertar existen; evitar que First produzca una excepción genérica. La misma validación puede aplicarse a CategoryId.
